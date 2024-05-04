@@ -5,8 +5,6 @@ public class Spawner : ObjectPool
 {
     [SerializeField] private Cube _prefab;
 
-    [SerializeField] private float _secondBetweenSpawn;
-
     [SerializeField] private Transform _leftZone;
     [SerializeField] private Transform _rightZone;
     [SerializeField] private Transform _upZone;
@@ -17,27 +15,32 @@ public class Spawner : ObjectPool
 
     private Coroutine _coroutine;
 
+    private bool _isOpen = true;
+
     private void Start()
     {
         Initialize(_prefab);
+        _coroutine = StartCoroutine(CreateObject());
     }
 
     private void Update()
     {
         _elepsedTime += Time.deltaTime;
-        _coroutine = StartCoroutine(CreateObject());
     }
 
     private IEnumerator CreateObject()
     {
-        if (_elepsedTime >= _secondBetweenSpawn)
-            if (TryGetObject(out Cube cube))
-            {
-                _elepsedTime = 0;
-                SetCube(cube);
-            }
+        while (_isOpen)
+        {
+            if (_elepsedTime >= _delay)
+                if (TryGetObject(out Cube cube))
+                {
+                    _elepsedTime = 0;
+                    SetCube(cube);
+                }
 
         yield return new WaitForSeconds(_delay);
+        }
     }
 
     private void SetCube(Cube cube)
@@ -45,6 +48,7 @@ public class Spawner : ObjectPool
         cube.SetDefaultColor();
         cube.gameObject.SetActive(true);
         cube.transform.position = GetRandomPosition();
+        cube.AuthorizeColorChange();
     }
 
     private Vector3 GetRandomPosition()
@@ -57,6 +61,6 @@ public class Spawner : ObjectPool
 
     private void OnCollisionEnter(Collision collision)
     {
-        collision.gameObject.GetComponent<Cube>().Initialize();
+        collision.gameObject.GetComponent<Cube>().StartLifeCycle();
     }
 }

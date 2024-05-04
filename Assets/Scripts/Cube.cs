@@ -6,6 +6,7 @@ public class Cube : MonoBehaviour
 {
     private float _minLifetime = 2f;
     private float _maxLifetime = 5f;
+    private bool _isChangedColor;
 
     private Renderer _renderer;
 
@@ -14,15 +15,22 @@ public class Cube : MonoBehaviour
 
     private float _lifetime => Random.Range(_minLifetime, _maxLifetime);
 
+
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
         _defaultColor = Color.white;
     }
 
-    public void Initialize()
+    private void Start()
     {
-        SetColor(CreateRandomColor());
+        _isChangedColor = false;
+    }
+
+    public void StartLifeCycle()
+    {
+        if (_isChangedColor == false)
+            SetColor(CreateRandomColor());
 
         if (_coroutine != null)
             StopCoroutine(_coroutine);
@@ -32,6 +40,9 @@ public class Cube : MonoBehaviour
 
     public void SetDefaultColor() =>
         SetColor(_defaultColor);
+
+    public void AuthorizeColorChange() =>
+        _isChangedColor = false;
 
     private void Die() =>
         gameObject.SetActive(false);
@@ -46,6 +57,9 @@ public class Cube : MonoBehaviour
     private Color CreateRandomColor() =>
         new Color(Random.value, Random.value, Random.value);
 
-    private Color SetColor(Color color) =>
-        _renderer.material.color = color;
+    private Color SetColor(Color color)
+    {
+        _isChangedColor = true;
+        return _renderer.material.color = color;
+    }
 }
