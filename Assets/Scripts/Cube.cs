@@ -15,7 +15,6 @@ public class Cube : MonoBehaviour
 
     private float _lifetime => Random.Range(_minLifetime, _maxLifetime);
 
-
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
@@ -57,9 +56,9 @@ public class Cube : MonoBehaviour
     private Color CreateRandomColor() =>
         new Color(Random.value, Random.value, Random.value);
 
-    private Color SetColor(Color color)
+    private void SetColor(Color color)
     {
         _isChangedColor = true;
-        return _renderer.material.color = color;
+        _renderer.material.color = color;
     }
 }

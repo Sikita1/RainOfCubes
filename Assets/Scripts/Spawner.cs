@@ -23,23 +23,17 @@ public class Spawner : ObjectPool
         _coroutine = StartCoroutine(CreateObject());
     }
 
-    private void Update()
-    {
-        _elepsedTime += Time.deltaTime;
-    }
-
     private IEnumerator CreateObject()
     {
         while (_isOpen)
         {
-            if (_elepsedTime >= _delay)
-                if (TryGetObject(out Cube cube))
-                {
-                    _elepsedTime = 0;
-                    SetCube(cube);
-                }
+            if (TryGetObject(out Cube cube))
+            {
+                _elepsedTime = 0;
+                SetCube(cube);
+            }
 
-        yield return new WaitForSeconds(_delay);
+            yield return new WaitForSeconds(_delay);
         }
     }
 
