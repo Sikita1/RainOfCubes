@@ -10,7 +10,6 @@ public class Spawner : ObjectPool
     [SerializeField] private Transform _upZone;
     [SerializeField] private Transform _downZone;
 
-    private float _elepsedTime = 0;
     private float _delay = 1f;
 
     private Coroutine _coroutine;
@@ -30,10 +29,7 @@ public class Spawner : ObjectPool
         while (_isOpen)
         {
             if (TryGetObject(out Cube cube))
-            {
-                _elepsedTime = 0;
                 SetCube(cube);
-            }
 
             yield return wait;
         }

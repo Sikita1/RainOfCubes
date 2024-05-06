@@ -21,12 +21,6 @@ public class Cube : MonoBehaviour
         _defaultColor = Color.white;
     }
 
-    private void Start()
-    {
-        _isChangedColor = false;
-        StartLifeCircle();
-    }
-
     public void StartLifeCircle()
     {
         if (_coroutine != null)
