@@ -25,6 +25,8 @@ public class Spawner : ObjectPool
 
     private IEnumerator CreateObject()
     {
+        WaitForSeconds wait = new WaitForSeconds(_delay);
+
         while (_isOpen)
         {
             if (TryGetObject(out Cube cube))
@@ -33,7 +35,7 @@ public class Spawner : ObjectPool
                 SetCube(cube);
             }
 
-            yield return new WaitForSeconds(_delay);
+            yield return wait;
         }
     }
 
@@ -43,6 +45,7 @@ public class Spawner : ObjectPool
         cube.gameObject.SetActive(true);
         cube.transform.position = GetRandomPosition();
         cube.AuthorizeColorChange();
+        cube.StartLifeCircle();
     }
 
     private Vector3 GetRandomPosition()
@@ -55,6 +58,6 @@ public class Spawner : ObjectPool
 
     private void OnCollisionEnter(Collision collision)
     {
-        collision.gameObject.GetComponent<Cube>().StartLifeCycle();
+        collision.gameObject.GetComponent<Cube>().ChangedColor();
     }
 }

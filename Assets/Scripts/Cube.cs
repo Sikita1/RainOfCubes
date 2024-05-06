@@ -13,7 +13,7 @@ public class Cube : MonoBehaviour
     private Color _defaultColor;
     private Coroutine _coroutine;
 
-    private float _lifetime => Random.Range(_minLifetime, _maxLifetime);
+    private float Lifetime => Random.Range(_minLifetime, _maxLifetime);
 
     private void Awake()
     {
@@ -24,17 +24,21 @@ public class Cube : MonoBehaviour
     private void Start()
     {
         _isChangedColor = false;
+        StartLifeCircle();
     }
 
-    public void StartLifeCycle()
+    public void StartLifeCircle()
     {
-        if (_isChangedColor == false)
-            SetColor(CreateRandomColor());
-
         if (_coroutine != null)
             StopCoroutine(_coroutine);
 
         _coroutine = StartCoroutine(Disappear());
+    }
+
+    public void ChangedColor()
+    {
+        if (_isChangedColor == false)
+            SetColor(CreateRandomColor());
     }
 
     public void SetDefaultColor() =>
@@ -48,7 +52,9 @@ public class Cube : MonoBehaviour
 
     private IEnumerator Disappear()
     {
-        yield return new WaitForSeconds(_lifetime);
+        WaitForSeconds wait = new WaitForSeconds(Lifetime);
+
+        yield return wait;
 
         Die();
     }
