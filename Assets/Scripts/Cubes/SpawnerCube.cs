@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Spawner : ObjectPool
+public class SpawnerCube : ObjectPool
 {
     [SerializeField] private Cube _prefab;
 
@@ -50,10 +50,5 @@ public class Spawner : ObjectPool
         float positionZ = Random.Range(_upZone.position.z, _downZone.position.z);
 
         return new Vector3(positionX, _leftZone.position.y, positionZ);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        collision.gameObject.GetComponent<Cube>().ChangedColor();
     }
 }

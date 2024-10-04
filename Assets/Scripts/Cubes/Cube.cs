@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Renderer))]
 public class Cube : MonoBehaviour
@@ -15,10 +16,17 @@ public class Cube : MonoBehaviour
 
     private float Lifetime => Random.Range(_minLifetime, _maxLifetime);
 
+    public event UnityAction Died;
+
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
         _defaultColor = Color.white;
+    }
+
+    private void OnDisable()
+    {
+        Died?.Invoke();
     }
 
     public void StartLifeCircle()
@@ -26,7 +34,7 @@ public class Cube : MonoBehaviour
         if (_coroutine != null)
             StopCoroutine(_coroutine);
 
-        _coroutine = StartCoroutine(Disappear());
+        _coroutine = StartCoroutine(FadeAway());
     }
 
     public void ChangedColor()
@@ -34,6 +42,10 @@ public class Cube : MonoBehaviour
         if (_isChangedColor == false)
             SetColor(CreateRandomColor());
     }
+
+    public Vector3 GetPosition() =>
+        gameObject.transform.position;
+
 
     public void SetDefaultColor() =>
         SetColor(_defaultColor);
@@ -44,7 +56,7 @@ public class Cube : MonoBehaviour
     private void Die() =>
         gameObject.SetActive(false);
 
-    private IEnumerator Disappear()
+    private IEnumerator FadeAway()
     {
         WaitForSeconds wait = new WaitForSeconds(Lifetime);
 
