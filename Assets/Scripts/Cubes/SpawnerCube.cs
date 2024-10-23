@@ -1,37 +1,49 @@
 using System.Collections;
 using UnityEngine;
 
-public class SpawnerCube : ObjectPool
+public class SpawnerCube : Spawner<Cube>
 {
-    [SerializeField] private Cube _prefab;
+    [SerializeField] private SpawnerBomb _bomb;
+    [SerializeField] private Cube _cube;
 
     [SerializeField] private Transform _leftZone;
     [SerializeField] private Transform _rightZone;
     [SerializeField] private Transform _upZone;
     [SerializeField] private Transform _downZone;
 
-    private float _delay = 1f;
+    private WaitForSeconds _wait;
 
     private Coroutine _coroutine;
 
+    private float _delay = 1f;
+
     private bool _isOpen = true;
 
-    private void Start()
+    private void Awake()
     {
-        Initialize(_prefab);
+        _wait = new WaitForSeconds(_delay);
         _coroutine = StartCoroutine(CreateObject());
+    }
+
+    private void OnDied(Cube cube)
+    {
+        _bomb.CreateObject(cube.transform.position);
+        ObjectDeactivated();
+        cube.Died -= OnDied;
     }
 
     private IEnumerator CreateObject()
     {
-        WaitForSeconds wait = new WaitForSeconds(_delay);
-
         while (_isOpen)
         {
             if (TryGetObject(out Cube cube))
+            {
                 SetCube(cube);
+                ObjectCreated();
+                ObjectActivated();
+            }
 
-            yield return wait;
+            yield return _wait;
         }
     }
 
@@ -42,6 +54,7 @@ public class SpawnerCube : ObjectPool
         cube.transform.position = GetRandomPosition();
         cube.AuthorizeColorChange();
         cube.StartLifeCircle();
+        cube.Died += OnDied;
     }
 
     private Vector3 GetRandomPosition()

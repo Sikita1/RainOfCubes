@@ -1,26 +1,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
-public class ObjectPool : MonoBehaviour
+public class ObjectPooll<T> : MonoBehaviour where T : MonoBehaviour
 {
     [SerializeField] private GameObject _container;
     [SerializeField] private int _capacity;
 
-    private List<Cube> _pool = new List<Cube>();
+    public event Action<int> FacilitiesCreated;
 
-    protected void Initialize(Cube prefab)
+    private int _objects—reated = 0;
+
+    private List<T> _pool = new List<T>();
+
+    public void Initialize(T prefab)
     {
         for (int i = 0; i < _capacity; i++)
         {
-            Cube spawned = Instantiate(prefab, _container.transform);
+            var spawned = Instantiate(prefab, _container.transform);
             spawned.gameObject.SetActive(false);
+
+            _objects—reated++;
+            FacilitiesCreated?.Invoke(_objects—reated);
 
             _pool.Add(spawned);
         }
     }
 
-    protected bool TryGetObject(out Cube result)
+    public bool TryGetObject(out T result)
     {
         result = _pool.FirstOrDefault(unit => unit.gameObject.activeSelf == false);
 

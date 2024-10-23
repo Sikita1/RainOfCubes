@@ -128,6 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01e8adb6cc6180845b49902e51cff905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _defaultColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!114 &-7525682776238974102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,6 +141,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6f6d03478fffad4592816d1739b6dda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fissionExplosionRadius: 20
-  _fussionExplosionForce: 300
   _unit: {fileID: -3107520023469608025}

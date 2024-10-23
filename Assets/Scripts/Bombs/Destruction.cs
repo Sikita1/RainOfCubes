@@ -1,12 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class Destruction : MonoBehaviour
 {
-    [SerializeField] private float _fissionExplosionRadius;
-    [SerializeField] private float _fussionExplosionForce;
-
     [SerializeField] private Bomb _unit;
 
     private void OnEnable()
@@ -23,20 +19,20 @@ public class Destruction : MonoBehaviour
     {
         units
             .ForEach(rigidbody => rigidbody
-            .AddExplosion(_fussionExplosionForce, transform.position, _fissionExplosionRadius));
+            .AddExplosion(transform.position));
     }
 
     public void OnObliterating()
     {
         foreach (Rigidbody explodableObject in GetExplodableObjects())
-            explodableObject.AddExplosionForce(_unit.CurrentForceDestruction,
+            explodableObject.AddExplosionForce(_unit.ForceDestruction,
                                                transform.position,
-                                               _unit.CurrentRadiusDestruction);
+                                               _unit.RadiusDestruction);
     }
 
     private IEnumerable<Rigidbody> GetExplodableObjects()
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position, _unit.CurrentRadiusDestruction);
+        Collider[] hits = Physics.OverlapSphere(transform.position, _unit.RadiusDestruction);
 
         List<Rigidbody> objects = new();
 

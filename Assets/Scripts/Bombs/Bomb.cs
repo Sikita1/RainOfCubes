@@ -7,39 +7,48 @@ using DG.Tweening;
 [RequireComponent(typeof(Rigidbody))]
 public class Bomb : MonoBehaviour
 {
+    [SerializeField] private Color _defaultColor;
+
     private float _minLifetime = 2f;
     private float _maxLifetime = 5f;
 
     private WaitForSeconds _wait;
-
-    private Color _originalColor;
-
-    private float Lifetime => Random.Range(_minLifetime, _maxLifetime);
-
-    public float CurrentRadiusDestruction { get; private set; } = 20f;
-    public float CurrentForceDestruction { get; private set; } = 300f;
-
     private Renderer _renderer;
     private Rigidbody _rigidbody;
 
+    private float Lifetime =>
+        Random.Range(_minLifetime, _maxLifetime);
+
+    public float RadiusDestruction { get; private set; } = 20f;
+    public float ForceDestruction { get; private set; } = 300f;
+
     public event UnityAction Obliterating;
+    public event UnityAction<Bomb> Dead;
 
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
         _rigidbody = GetComponent<Rigidbody>();
-
-        _originalColor = _renderer.material.color;
     }
 
     private void Start()
     {
         _wait = new WaitForSeconds(Lifetime);
-        StartCoroutine(Disappear());
     }
+
+    public void SetDefaultColor() =>
+        _renderer.material.color = _defaultColor;
+
+    public void StartLifeTime() =>
+        StartCoroutine(Disappear());
+
+    public void AddExplosion(Vector3 position) =>
+        _rigidbody.AddExplosionForce(ForceDestruction, position, RadiusDestruction);
 
     private IEnumerator Disappear()
     {
+        yield return new WaitForSeconds(1);
+
         _renderer.material.DOFade(0, Lifetime);
 
         yield return _wait;
@@ -47,12 +56,10 @@ public class Bomb : MonoBehaviour
         Die();
     }
 
-    public void AddExplosion(float force, Vector3 position, float radius) =>
-        _rigidbody.AddExplosionForce(force, position, radius);
-
     private void Die()
     {
         Obliterating?.Invoke();
+        Dead?.Invoke(this);
         gameObject.SetActive(false);
     }
 }
