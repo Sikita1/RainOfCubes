@@ -13,8 +13,6 @@ public class SpawnerCube : Spawner<Cube>
 
     private WaitForSeconds _wait;
 
-    private Coroutine _coroutine;
-
     private float _delay = 1f;
 
     private bool _isOpen = true;
@@ -22,7 +20,7 @@ public class SpawnerCube : Spawner<Cube>
     private void Awake()
     {
         _wait = new WaitForSeconds(_delay);
-        _coroutine = StartCoroutine(CreateObject());
+        StartCoroutine(CreateObject());
     }
 
     private void OnDied(Cube cube)

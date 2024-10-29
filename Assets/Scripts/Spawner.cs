@@ -33,5 +33,4 @@ public class Spawner<T> : ObjectPooll<T> where T : MonoBehaviour
         Active--;
         ActiveObjects?.Invoke(Active);
     }
-
 }

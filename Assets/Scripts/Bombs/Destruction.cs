@@ -15,13 +15,6 @@ public class Destruction : MonoBehaviour
         _unit.Obliterating -= OnObliterating;
     }
 
-    public void Explode(List<Bomb> units)
-    {
-        units
-            .ForEach(rigidbody => rigidbody
-            .AddExplosion(transform.position));
-    }
-
     public void OnObliterating()
     {
         foreach (Rigidbody explodableObject in GetExplodableObjects())

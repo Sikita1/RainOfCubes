@@ -29,10 +29,7 @@ public class Bomb : MonoBehaviour
     {
         _renderer = GetComponent<Renderer>();
         _rigidbody = GetComponent<Rigidbody>();
-    }
 
-    private void Start()
-    {
         _wait = new WaitForSeconds(Lifetime);
     }
 
@@ -47,8 +44,6 @@ public class Bomb : MonoBehaviour
 
     private IEnumerator Disappear()
     {
-        yield return new WaitForSeconds(1);
-
         _renderer.material.DOFade(0, Lifetime);
 
         yield return _wait;
